@@ -62,8 +62,7 @@ class AuthService implements AuthServiceInterface
     public function resetPassword(array $data): string
     {
         return Password::reset($data, function (User $user, string $password) {
-            $user->password = $password;
-            $user->save();
+            $this->userRepository->update($user, ['password' => $password]);
         });
     }
 }

@@ -34,7 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+        $exceptions->render(function (NotFoundHttpException|ModelNotFoundException $e, Request $request) {
             if ($request->is('api/*')) {
                 return ErrorCode::NOT_FOUND->response();
             }
@@ -46,37 +46,19 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        $exceptions->render(function (ModelNotFoundException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return ErrorCode::NOT_FOUND->response();
-            }
-        });
-
         $exceptions->render(function (ValidationException $e, Request $request) {
             if ($request->is('api/*')) {
                 return ErrorCode::VALIDATION_ERROR->response(details: $e->errors());
             }
         });
 
-        $exceptions->render(function (AuthenticationException|UnauthorizedHttpException $e, Request $request) {
+        $exceptions->render(function (AuthenticationException|UnauthorizedHttpException|JWTException $e, Request $request) {
             if ($request->is('api/*')) {
                 return ErrorCode::UNAUTHORIZED->response();
             }
         });
 
-        $exceptions->render(function (JWTException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return ErrorCode::UNAUTHORIZED->response();
-            }
-        });
-
-        $exceptions->render(function (AccessDeniedHttpException|UnauthorizedException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return ErrorCode::FORBIDDEN->response();
-            }
-        });
-
-        $exceptions->render(function (AuthorizationException $e, Request $request) {
+        $exceptions->render(function (AccessDeniedHttpException|UnauthorizedException|AuthorizationException $e, Request $request) {
             if ($request->is('api/*')) {
                 return ErrorCode::FORBIDDEN->response();
             }
