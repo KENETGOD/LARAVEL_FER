@@ -58,6 +58,7 @@ class AuthController extends Controller
                 )
             ),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 429, description: 'Demasiadas solicitudes'),
         ]
     )]
     public function register(RegisterRequest $request): JsonResponse
@@ -110,6 +111,7 @@ class AuthController extends Controller
             ),
             new OA\Response(response: 401, description: 'Credenciales incorrectas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 429, description: 'Demasiadas solicitudes'),
         ]
     )]
     public function login(LoginRequest $request): JsonResponse
@@ -182,6 +184,7 @@ class AuthController extends Controller
                 )
             ),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 429, description: 'Demasiadas solicitudes'),
         ]
     )]
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
@@ -221,7 +224,9 @@ class AuthController extends Controller
                 )
             ),
             new OA\Response(response: 400, description: 'Token inválido o expirado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 404, description: 'Usuario no encontrado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 429, description: 'Demasiadas solicitudes'),
         ]
     )]
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
@@ -269,6 +274,7 @@ class AuthController extends Controller
             new OA\Response(response: 400, description: 'Token inválido o expirado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Usuario no encontrado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 429, description: 'Demasiadas solicitudes'),
         ]
     )]
     public function verifyResetToken(VerifyResetTokenRequest $request): JsonResponse
@@ -313,6 +319,7 @@ class AuthController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o fuera de la ventana de refresh', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 429, description: 'Demasiadas solicitudes'),
         ]
     )]
     public function refresh(): JsonResponse

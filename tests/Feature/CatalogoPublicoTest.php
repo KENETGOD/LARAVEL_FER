@@ -123,7 +123,9 @@ class CatalogoPublicoTest extends TestCase
                 'precio' => 500,
                 'etiquetas_ids' => [$etiqueta->id],
             ])
-            ->assertStatus(201);
+            ->assertStatus(201)
+            ->assertJsonStructure(['mensaje', 'producto' => ['id', 'nombre', 'precio', 'categoria_id']])
+            ->assertJsonPath('mensaje', 'Producto creado con éxito');
 
         $id = $response->json('producto.id');
 
@@ -167,7 +169,8 @@ class CatalogoPublicoTest extends TestCase
 
         $this->withToken($this->token($admin))
             ->deleteJson("/api/productos/{$producto->id}")
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertJsonPath('mensaje', 'Producto eliminado correctamente');
 
         $this->assertDatabaseMissing('productos', ['id' => $producto->id]);
     }

@@ -42,7 +42,6 @@ class ProductoController extends Controller
                 description: 'Listado paginado de productos',
                 content: new OA\JsonContent(ref: '#/components/schemas/Paginado')
             ),
-            new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
     public function index(Request $request): JsonResponse
@@ -69,14 +68,15 @@ class ProductoController extends Controller
             content: new OA\JsonContent(
                 required: ['nombre', 'precio', 'categoria_id'],
                 properties: [
-                    new OA\Property(property: 'nombre', type: 'string', example: 'Teclado Mecánico'),
-                    new OA\Property(property: 'descripcion', type: 'string', example: 'Teclado con switches rojos'),
-                    new OA\Property(property: 'precio', type: 'number', format: 'float', example: 1200.50),
+                    new OA\Property(property: 'nombre', type: 'string', maxLength: 100, example: 'Teclado Mecánico'),
+                    new OA\Property(property: 'descripcion', type: 'string', nullable: true, example: 'Teclado con switches rojos'),
+                    new OA\Property(property: 'precio', type: 'number', format: 'float', minimum: 0, example: 1200.50),
                     new OA\Property(property: 'categoria_id', type: 'integer', example: 1),
                     new OA\Property(property: 'activo', type: 'boolean', example: true),
                     new OA\Property(
                         property: 'etiquetas_ids',
                         type: 'array',
+                        nullable: true,
                         description: 'Arreglo con los IDs de las etiquetas',
                         items: new OA\Items(type: 'integer', example: 2)
                     ),
@@ -131,7 +131,6 @@ class ProductoController extends Controller
                 description: 'Detalles del producto',
                 content: new OA\JsonContent(ref: '#/components/schemas/ProductoResource')
             ),
-            new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Producto no encontrado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
@@ -167,14 +166,64 @@ class ProductoController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'nombre', type: 'string', example: 'Teclado Mecánico RGB'),
-                    new OA\Property(property: 'descripcion', type: 'string', example: 'Teclado con switches azules'),
-                    new OA\Property(property: 'precio', type: 'number', format: 'float', example: 1500.00),
+                    new OA\Property(property: 'nombre', type: 'string', maxLength: 100, example: 'Teclado Mecánico RGB'),
+                    new OA\Property(property: 'descripcion', type: 'string', nullable: true, example: 'Teclado con switches azules'),
+                    new OA\Property(property: 'precio', type: 'number', format: 'float', minimum: 0, example: 1500.00),
                     new OA\Property(property: 'categoria_id', type: 'integer', example: 1),
                     new OA\Property(property: 'activo', type: 'boolean', example: true),
                     new OA\Property(
                         property: 'etiquetas_ids',
                         type: 'array',
+                        nullable: true,
+                        description: 'Arreglo con los IDs de las etiquetas',
+                        items: new OA\Items(type: 'integer', example: 2)
+                    ),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Producto actualizado exitosamente',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'mensaje', type: 'string', example: 'Producto actualizado con éxito'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/ProductoResource'),
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 404, description: 'Producto no encontrado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+        ]
+    )]
+    #[OA\Patch(
+        path: '/api/productos/{id}',
+        summary: 'Actualizar parcialmente un producto',
+        tags: ['Productos'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'ID del producto a actualizar',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'nombre', type: 'string', maxLength: 100, example: 'Teclado Mecánico RGB'),
+                    new OA\Property(property: 'descripcion', type: 'string', nullable: true, example: 'Teclado con switches azules'),
+                    new OA\Property(property: 'precio', type: 'number', format: 'float', minimum: 0, example: 1500.00),
+                    new OA\Property(property: 'categoria_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'activo', type: 'boolean', example: true),
+                    new OA\Property(
+                        property: 'etiquetas_ids',
+                        type: 'array',
+                        nullable: true,
                         description: 'Arreglo con los IDs de las etiquetas',
                         items: new OA\Items(type: 'integer', example: 2)
                     ),

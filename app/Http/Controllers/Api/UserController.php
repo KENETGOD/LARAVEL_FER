@@ -87,13 +87,13 @@ class UserController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/usuarios/{id}',
+        path: '/api/usuarios/{usuario}',
         summary: 'Mostrar un usuario por ID',
         tags: ['Usuarios'],
         security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: 'id',
+                name: 'usuario',
                 in: 'path',
                 description: 'ID del usuario a buscar',
                 required: true,
@@ -122,13 +122,48 @@ class UserController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/usuarios/{id}',
+        path: '/api/usuarios/{usuario}',
         summary: 'Actualizar un usuario',
         tags: ['Usuarios'],
         security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: 'id',
+                name: 'usuario',
+                in: 'path',
+                description: 'ID del usuario a actualizar',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', maxLength: 255, example: 'Juan Pérez'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'juan@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', minLength: 8, example: 'secret123'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Usuario actualizado',
+                content: new OA\JsonContent(ref: '#/components/schemas/UserResource')
+            ),
+            new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 404, description: 'Usuario no encontrado', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+        ]
+    )]
+    #[OA\Patch(
+        path: '/api/usuarios/{usuario}',
+        summary: 'Actualizar parcialmente un usuario',
+        tags: ['Usuarios'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'usuario',
                 in: 'path',
                 description: 'ID del usuario a actualizar',
                 required: true,
@@ -168,13 +203,13 @@ class UserController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/usuarios/{id}',
+        path: '/api/usuarios/{usuario}',
         summary: 'Eliminar un usuario',
         tags: ['Usuarios'],
         security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: 'id',
+                name: 'usuario',
                 in: 'path',
                 description: 'ID del usuario a eliminar',
                 required: true,

@@ -36,6 +36,20 @@ class PasswordRecoveryTest extends TestCase
         Notification::assertSentTo($user, ResetPasswordNotification::class);
     }
 
+    public function test_reset_password_notification_encodes_token_and_email_in_frontend_url(): void
+    {
+        config()->set('app.frontend_url', 'https://frontend.example.test/');
+        $user = User::factory()->create(['email' => 'user+reset@example.com']);
+        $token = 'token/with spaces+symbols';
+
+        $mail = (new ResetPasswordNotification($token))->toMail($user);
+
+        $this->assertSame(
+            'https://frontend.example.test/reset-password?token=token%2Fwith%20spaces%2Bsymbols&email=user%2Breset%40example.com',
+            $mail->actionUrl
+        );
+    }
+
     public function test_forgot_password_returns_same_message_for_unknown_email(): void
     {
         $response = $this->postJson('/api/auth/forgot-password', ['email' => 'nadie@example.com']);

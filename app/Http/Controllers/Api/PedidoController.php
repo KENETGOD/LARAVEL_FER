@@ -71,7 +71,9 @@ class PedidoController extends Controller
                     new OA\Property(
                         property: 'items',
                         type: 'array',
+                        minItems: 1,
                         items: new OA\Items(
+                            required: ['producto_id', 'cantidad'],
                             properties: [
                                 new OA\Property(property: 'producto_id', type: 'integer', example: 1),
                                 new OA\Property(property: 'cantidad', type: 'integer', example: 2),
@@ -172,7 +174,10 @@ class PedidoController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Estado actualizado',
-                content: new OA\JsonContent(ref: '#/components/schemas/PedidoResource')
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: 'mensaje', type: 'string', example: 'Estado actualizado a Pagado'),
+                    new OA\Property(property: 'data', ref: '#/components/schemas/PedidoResource'),
+                ])
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 403, description: 'Solo el admin', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),

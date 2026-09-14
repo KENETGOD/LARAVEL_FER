@@ -15,7 +15,9 @@ class DashboardController extends Controller
         tags: ['Roles'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Acceso concedido'),
+            new OA\Response(response: 200, description: 'Acceso concedido', content: new OA\JsonContent(properties: [
+                new OA\Property(property: 'mensaje', type: 'string', example: '¡Bienvenido al panel de Administrador! Todo funciona perfecto.'),
+            ])),
             new OA\Response(response: 401, description: 'Token inválido o ausente'),
             new OA\Response(response: 403, description: 'Rol sin permisos para acceder'),
         ]
@@ -32,7 +34,9 @@ class DashboardController extends Controller
         tags: ['Roles'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Acceso concedido'),
+            new OA\Response(response: 200, description: 'Acceso concedido', content: new OA\JsonContent(properties: [
+                new OA\Property(property: 'mensaje', type: 'string', example: 'Área de gestión de pedidos para Empleados'),
+            ])),
             new OA\Response(response: 401, description: 'Token inválido o ausente'),
             new OA\Response(response: 403, description: 'Rol sin permisos para acceder'),
         ]
@@ -49,7 +53,9 @@ class DashboardController extends Controller
         tags: ['Roles'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Acceso concedido'),
+            new OA\Response(response: 200, description: 'Acceso concedido', content: new OA\JsonContent(properties: [
+                new OA\Property(property: 'mensaje', type: 'string', example: 'Bienvenido a tu perfil de Cliente'),
+            ])),
             new OA\Response(response: 401, description: 'Token inválido o ausente'),
             new OA\Response(response: 403, description: 'Rol sin permisos para acceder'),
         ]

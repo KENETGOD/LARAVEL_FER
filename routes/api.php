@@ -14,16 +14,16 @@ Route::get('productos', [ProductoController::class, 'index']);
 Route::get('productos/{id}', [ProductoController::class, 'show']);
 
 Route::prefix('auth')->group(function () {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register'])->middleware('throttle:auth-register');
+    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
 
     // Recuperación de contraseña (públicas)
-    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('verify-reset-token', [AuthController::class, 'verifyResetToken']);
-    Route::post('reset-password', [AuthController::class, 'resetPassword']);
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:auth-forgot-password');
+    Route::post('verify-reset-token', [AuthController::class, 'verifyResetToken'])->middleware('throttle:auth-verify-reset-token');
+    Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:auth-reset-password');
 
     // Renovación de token JWT (sin middleware auth:api: admite tokens expirados dentro del refresh_ttl)
-    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware('throttle:auth-refresh');
 
     // Rutas protegidas (token JWT)
     Route::middleware('auth:api')->group(function () {

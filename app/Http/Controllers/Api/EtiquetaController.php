@@ -44,6 +44,7 @@ class EtiquetaController extends Controller
                 content: new OA\JsonContent(ref: '#/components/schemas/Paginado')
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar etiquetas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
     public function index(Request $request): JsonResponse
@@ -86,6 +87,7 @@ class EtiquetaController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar etiquetas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
@@ -123,6 +125,7 @@ class EtiquetaController extends Controller
                 content: new OA\JsonContent(ref: '#/components/schemas/EtiquetaResource')
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar etiquetas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Etiqueta no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
@@ -157,7 +160,6 @@ class EtiquetaController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['nombre'],
                 properties: [
                     new OA\Property(property: 'nombre', type: 'string', maxLength: 255, example: 'Oferta'),
                 ]
@@ -175,6 +177,34 @@ class EtiquetaController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar etiquetas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 404, description: 'Etiqueta no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+        ]
+    )]
+    #[OA\Patch(
+        path: '/api/etiquetas/{id}',
+        summary: 'Actualizar parcialmente una etiqueta',
+        tags: ['Etiquetas'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'ID de la etiqueta a actualizar', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'nombre', type: 'string', maxLength: 255, example: 'Oferta'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Etiqueta actualizada con éxito', content: new OA\JsonContent(properties: [
+                new OA\Property(property: 'mensaje', type: 'string', example: 'Etiqueta actualizada con éxito'),
+                new OA\Property(property: 'data', ref: '#/components/schemas/EtiquetaResource'),
+            ])),
+            new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar etiquetas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Etiqueta no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
@@ -221,7 +251,9 @@ class EtiquetaController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar etiquetas', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Etiqueta no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 422, description: 'No se puede eliminar una etiqueta asignada a productos', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
     public function destroy(int $id): JsonResponse

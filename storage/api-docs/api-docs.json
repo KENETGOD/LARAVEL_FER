@@ -94,6 +94,9 @@
                                 }
                             }
                         }
+                    },
+                    "429": {
+                        "description": "Demasiadas solicitudes"
                     }
                 }
             }
@@ -184,6 +187,9 @@
                                 }
                             }
                         }
+                    },
+                    "429": {
+                        "description": "Demasiadas solicitudes"
                     }
                 }
             }
@@ -284,6 +290,9 @@
                                 }
                             }
                         }
+                    },
+                    "429": {
+                        "description": "Demasiadas solicitudes"
                     }
                 }
             }
@@ -361,6 +370,16 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Error de validación",
                         "content": {
@@ -370,6 +389,9 @@
                                 }
                             }
                         }
+                    },
+                    "429": {
+                        "description": "Demasiadas solicitudes"
                     }
                 }
             }
@@ -453,6 +475,9 @@
                                 }
                             }
                         }
+                    },
+                    "429": {
+                        "description": "Demasiadas solicitudes"
                     }
                 }
             }
@@ -504,6 +529,9 @@
                                 }
                             }
                         }
+                    },
+                    "429": {
+                        "description": "Demasiadas solicitudes"
                     }
                 },
                 "security": [
@@ -546,6 +574,16 @@
                     },
                     "401": {
                         "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar categorías",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -618,6 +656,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar categorías",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Error de validación",
                         "content": {
@@ -676,6 +724,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar categorías",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Categoría no encontrada",
                         "content": {
@@ -716,9 +774,6 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "nombre"
-                                ],
                                 "properties": {
                                     "nombre": {
                                         "type": "string",
@@ -753,6 +808,16 @@
                     },
                     "401": {
                         "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar categorías",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -833,8 +898,129 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar categorías",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "No se puede eliminar una categoría con productos asociados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Actualizar parcialmente una categoría",
+                "operationId": "48c90b593ec558e1ca950ed3971b1879",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Tecnología",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoría actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Categoría actualizada"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CategoriaResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar categorías",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -861,7 +1047,20 @@
                 "operationId": "dc1b94ea7171857b36212ad34ca36d29",
                 "responses": {
                     "200": {
-                        "description": "Acceso concedido"
+                        "description": "Acceso concedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "¡Bienvenido al panel de Administrador! Todo funciona perfecto."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Token inválido o ausente"
@@ -887,7 +1086,20 @@
                 "operationId": "5a38d1a535409972e5c6740e93c8c14d",
                 "responses": {
                     "200": {
-                        "description": "Acceso concedido"
+                        "description": "Acceso concedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Área de gestión de pedidos para Empleados"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Token inválido o ausente"
@@ -913,7 +1125,20 @@
                 "operationId": "3040500afc1969c395b909180089c123",
                 "responses": {
                     "200": {
-                        "description": "Acceso concedido"
+                        "description": "Acceso concedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Bienvenido a tu perfil de Cliente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Token inválido o ausente"
@@ -962,6 +1187,16 @@
                     },
                     "401": {
                         "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar etiquetas",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1034,6 +1269,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar etiquetas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Error de validación",
                         "content": {
@@ -1092,6 +1337,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar etiquetas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Etiqueta no encontrada",
                         "content": {
@@ -1132,9 +1387,6 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "nombre"
-                                ],
                                 "properties": {
                                     "nombre": {
                                         "type": "string",
@@ -1169,6 +1421,16 @@
                     },
                     "401": {
                         "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar etiquetas",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1249,8 +1511,129 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar etiquetas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Etiqueta no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "No se puede eliminar una etiqueta asignada a productos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Etiquetas"
+                ],
+                "summary": "Actualizar parcialmente una etiqueta",
+                "operationId": "b4cebeb7f05f5103c123d37798dd1dc0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la etiqueta a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Oferta",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Etiqueta actualizada con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Etiqueta actualizada con éxito"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/EtiquetaResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rol sin permisos para gestionar etiquetas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Etiqueta no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1344,6 +1727,10 @@
                                     "items": {
                                         "type": "array",
                                         "items": {
+                                            "required": [
+                                                "producto_id",
+                                                "cantidad"
+                                            ],
                                             "properties": {
                                                 "producto_id": {
                                                     "type": "integer",
@@ -1355,7 +1742,8 @@
                                                 }
                                             },
                                             "type": "object"
-                                        }
+                                        },
+                                        "minItems": 1
                                     }
                                 },
                                 "type": "object"
@@ -1540,7 +1928,16 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/PedidoResource"
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Estado actualizado a Pagado"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PedidoResource"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1623,16 +2020,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Token inválido o ausente",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -1656,16 +2043,19 @@
                                 "properties": {
                                     "nombre": {
                                         "type": "string",
-                                        "example": "Teclado Mecánico"
+                                        "example": "Teclado Mecánico",
+                                        "maxLength": 100
                                     },
                                     "descripcion": {
                                         "type": "string",
-                                        "example": "Teclado con switches rojos"
+                                        "example": "Teclado con switches rojos",
+                                        "nullable": true
                                     },
                                     "precio": {
                                         "type": "number",
                                         "format": "float",
-                                        "example": 1200.5
+                                        "example": 1200.5,
+                                        "minimum": 0
                                     },
                                     "categoria_id": {
                                         "type": "integer",
@@ -1681,7 +2071,8 @@
                                         "items": {
                                             "type": "integer",
                                             "example": 2
-                                        }
+                                        },
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -1767,16 +2158,6 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Token inválido o ausente",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Producto no encontrado",
                         "content": {
@@ -1815,16 +2196,19 @@
                                 "properties": {
                                     "nombre": {
                                         "type": "string",
-                                        "example": "Teclado Mecánico RGB"
+                                        "example": "Teclado Mecánico RGB",
+                                        "maxLength": 100
                                     },
                                     "descripcion": {
                                         "type": "string",
-                                        "example": "Teclado con switches azules"
+                                        "example": "Teclado con switches azules",
+                                        "nullable": true
                                     },
                                     "precio": {
                                         "type": "number",
                                         "format": "float",
-                                        "example": 1500
+                                        "example": 1500,
+                                        "minimum": 0
                                     },
                                     "categoria_id": {
                                         "type": "integer",
@@ -1840,7 +2224,8 @@
                                         "items": {
                                             "type": "integer",
                                             "example": 2
-                                        }
+                                        },
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -1952,6 +2337,125 @@
                     },
                     "404": {
                         "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Productos"
+                ],
+                "summary": "Actualizar parcialmente un producto",
+                "operationId": "24415468faff3aed348ce9440a80c6e8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del producto a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Teclado Mecánico RGB",
+                                        "maxLength": 100
+                                    },
+                                    "descripcion": {
+                                        "type": "string",
+                                        "example": "Teclado con switches azules",
+                                        "nullable": true
+                                    },
+                                    "precio": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1500,
+                                        "minimum": 0
+                                    },
+                                    "categoria_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "activo": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "etiquetas_ids": {
+                                        "description": "Arreglo con los IDs de las etiquetas",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producto actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "example": "Producto actualizado con éxito"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProductoResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2094,16 +2598,16 @@
                 ]
             }
         },
-        "/api/usuarios/{id}": {
+        "/api/usuarios/{usuario}": {
             "get": {
                 "tags": [
                     "Usuarios"
                 ],
                 "summary": "Mostrar un usuario por ID",
-                "operationId": "177b75957dba46192af78d1ad338ab76",
+                "operationId": "89257888dc044c5b85f4402eb1591936",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "usuario",
                         "in": "path",
                         "description": "ID del usuario a buscar",
                         "required": true,
@@ -2155,10 +2659,10 @@
                     "Usuarios"
                 ],
                 "summary": "Actualizar un usuario",
-                "operationId": "7cd5dc3011a90c5aa5f94d6a387257e7",
+                "operationId": "1a0686a79c9b4f4ce2121acf8c9c1abc",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "usuario",
                         "in": "path",
                         "description": "ID del usuario a actualizar",
                         "required": true,
@@ -2248,10 +2752,10 @@
                     "Usuarios"
                 ],
                 "summary": "Eliminar un usuario",
-                "operationId": "d0e6b89442ffaa6fbfdd18bc6838a6d2",
+                "operationId": "4dff1c0d4b3282a7a4e7bb4611918bc9",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "usuario",
                         "in": "path",
                         "description": "ID del usuario a eliminar",
                         "required": true,
@@ -2276,6 +2780,99 @@
                     },
                     "404": {
                         "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Actualizar parcialmente un usuario",
+                "operationId": "66c97b9e38a5044a83cd52942d93eaca",
+                "parameters": [
+                    {
+                        "name": "usuario",
+                        "in": "path",
+                        "description": "ID del usuario a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123",
+                                        "minLength": 8
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido o ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
                         "content": {
                             "application/json": {
                                 "schema": {

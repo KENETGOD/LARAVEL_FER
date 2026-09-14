@@ -44,6 +44,7 @@ class CategoriaController extends Controller
                 content: new OA\JsonContent(ref: '#/components/schemas/Paginado')
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar categorías', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
     public function index(Request $request): JsonResponse
@@ -86,6 +87,7 @@ class CategoriaController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar categorías', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
@@ -123,6 +125,7 @@ class CategoriaController extends Controller
                 content: new OA\JsonContent(ref: '#/components/schemas/CategoriaResource')
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar categorías', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Categoría no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
@@ -157,7 +160,6 @@ class CategoriaController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['nombre'],
                 properties: [
                     new OA\Property(property: 'nombre', type: 'string', maxLength: 255, example: 'Tecnología'),
                 ]
@@ -175,6 +177,34 @@ class CategoriaController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar categorías', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 404, description: 'Categoría no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+        ]
+    )]
+    #[OA\Patch(
+        path: '/api/categorias/{id}',
+        summary: 'Actualizar parcialmente una categoría',
+        tags: ['Categorías'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'ID de la categoría a actualizar', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'nombre', type: 'string', maxLength: 255, example: 'Tecnología'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Categoría actualizada', content: new OA\JsonContent(properties: [
+                new OA\Property(property: 'mensaje', type: 'string', example: 'Categoría actualizada'),
+                new OA\Property(property: 'data', ref: '#/components/schemas/CategoriaResource'),
+            ])),
+            new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar categorías', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Categoría no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 422, description: 'Error de validación', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
@@ -221,7 +251,9 @@ class CategoriaController extends Controller
                 )
             ),
             new OA\Response(response: 401, description: 'Token inválido o ausente', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 403, description: 'Rol sin permisos para gestionar categorías', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
             new OA\Response(response: 404, description: 'Categoría no encontrada', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
+            new OA\Response(response: 422, description: 'No se puede eliminar una categoría con productos asociados', content: new OA\JsonContent(ref: '#/components/schemas/ErrorResponse')),
         ]
     )]
     public function destroy(int $id): JsonResponse

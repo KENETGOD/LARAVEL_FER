@@ -70,6 +70,34 @@ class PedidoApiTest extends TestCase
             ->assertJsonPath('data.productos.0.subtotal', 2401);
     }
 
+    public function test_cliente_crea_pedido_con_multiples_productos_y_cantidades(): void
+    {
+        $cliente = $this->crearUsuario('cliente', 'cliente@example.com');
+        $primerProducto = $this->crearProducto();
+        $segundoProducto = $this->crearProducto();
+
+        $response = $this->withToken($this->token($cliente))
+            ->postJson('/api/pedidos', [
+                'items' => [
+                    ['producto_id' => $primerProducto->id, 'cantidad' => 2],
+                    ['producto_id' => $segundoProducto->id, 'cantidad' => 3],
+                ],
+            ])
+            ->assertStatus(201)
+            ->assertJsonPath('data.estado', 'pendiente')
+            ->assertJsonPath('data.total', 6002.5);
+
+        $this->assertCount(2, $response->json('data.productos'));
+        $this->assertDatabaseHas('pedido_producto', [
+            'producto_id' => $primerProducto->id,
+            'cantidad' => 2,
+        ]);
+        $this->assertDatabaseHas('pedido_producto', [
+            'producto_id' => $segundoProducto->id,
+            'cantidad' => 3,
+        ]);
+    }
+
     public function test_cliente_solo_ve_sus_pedidos(): void
     {
         $cliente1 = $this->crearUsuario('cliente', 'cliente1@example.com');
@@ -108,6 +136,20 @@ class PedidoApiTest extends TestCase
         Pedido::create(['user_id' => $cliente2->id, 'total' => 200, 'estado' => 'pendiente']);
 
         $this->withToken($this->token($empleado))
+            ->getJson('/api/pedidos')
+            ->assertStatus(200)
+            ->assertJsonPath('data.total', 2);
+    }
+
+    public function test_admin_ve_todos_los_pedidos(): void
+    {
+        $cliente = $this->crearUsuario('cliente', 'cliente@example.com');
+        $admin = $this->crearUsuario('admin', 'admin@example.com');
+
+        Pedido::create(['user_id' => $cliente->id, 'total' => 100, 'estado' => 'pendiente']);
+        Pedido::create(['user_id' => $cliente->id, 'total' => 200, 'estado' => 'pendiente']);
+
+        $this->withToken($this->token($admin))
             ->getJson('/api/pedidos')
             ->assertStatus(200)
             ->assertJsonPath('data.total', 2);
